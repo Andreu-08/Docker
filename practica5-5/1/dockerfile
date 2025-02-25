@@ -1,0 +1,29 @@
+# Usar la imagen base de Debian Buster en su versión ligera
+FROM debian:buster-slim
+
+# Actualizar los repositorios e instalar el servidor SSH
+RUN apt-get update && apt-get install -y openssh-server 
+
+# Crear el directorio para el proceso SSH
+RUN mkdir /var/run/sshd
+
+# Crear un usuario llamado 'andreu' con bash como shell y establecer su contraseña
+RUN useradd -m -s /bin/bash andreu && echo 'andreu:andreu' | chpasswd
+
+# Permitir el inicio de sesión como root por SSH
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&\
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Exponer el puerto 22 para acceder al servidor SSH
+EXPOSE 22
+
+# Comando para iniciar el servidor SSH en primer plano
+CMD ["/usr/sbin/sshd", "-D"]
+
+# Consejos y trucos:
+# - Usa 'docker build -t nombre_imagen .' para construir la imagen.
+# - Usa 'docker run -p 22:22 nombre_imagen' para ejecutar el contenedor y mapear el puerto 22 del host al contenedor.
+# - Verifica los logs del contenedor con 'docker logs id_contenedor' para solucionar problemas.
+# - Usa 'docker exec -it id_contenedor /bin/bash' para acceder al contenedor en ejecución y depurar.
+# - Conéctate al servidor SSH dentro del contenedor usando 'ssh andreu@localhost -p 22'.
+

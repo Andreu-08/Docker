@@ -10,3 +10,6 @@
 
 # No ignorar el archivo .gitignore
 !.gitignore
+
+# No ignorar los directorios
+!*/

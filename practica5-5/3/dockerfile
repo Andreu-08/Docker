@@ -1,0 +1,24 @@
+# Usar la imagen base de Python 3.9 en una versión ligera de Debian
+FROM python:3.9-slim
+
+# Establecer el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copiar el archivo index.py al directorio de trabajo
+COPY index.py ./     
+
+# Actualizar los repositorios e instalar vim y git, luego limpiar la caché de apt
+RUN apt-get update && apt-get install -y vim git && rm -rf /var/lib/apt/lists/*
+
+# Actualizar pip a la última versión
+RUN pip install --upgrade pip
+
+# Comando para ejecutar el script de Python
+CMD ["python", "index.py"]
+
+# Consejos y trucos:
+# - Usa 'docker build -t nombre_imagen .' para construir la imagen.
+# - Usa 'docker run nombre_imagen' para ejecutar el contenedor.
+# - Verifica los logs del contenedor con 'docker logs id_contenedor' para solucionar problemas.
+# - Usa 'docker exec -it id_contenedor /bin/bash' para acceder al contenedor en ejecución y depurar.
+

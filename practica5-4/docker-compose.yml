@@ -1,0 +1,50 @@
+services:
+  nginx:
+    # Construir la imagen de Nginx desde el Dockerfile en el directorio ./nginx/
+    build: ./nginx/
+    container_name: nginx-container
+    ports:
+      # Mapear el puerto 80 del host al puerto 80 del contenedor
+      - 80:80
+    links:
+      # Enlazar el servicio de Nginx con el servicio de PHP
+      - php
+    volumes:
+      # Montar el directorio ./www/html/ del host en /var/www/html/ del contenedor
+      - ./www/html/:/var/www/html/
+  php:
+    # Construir la imagen de PHP desde el Dockerfile en el directorio ./php/
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+    container_name: php-container
+    expose:
+      # Exponer el puerto 9000 para la comunicación con Nginx
+      - "9000"
+    volumes:
+      # Montar el directorio ./www/html/ del host en /var/www/html/ del contenedor
+      - ./www/html/:/var/www/html/
+  mysql:
+    # Usar la imagen oficial de MySQL versión 5.7
+    image: mysql:5.7
+    container_name: mysql-container
+    restart: always
+    environment:
+      # Configurar las variables de entorno para MySQL
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: password
+    volumes:
+      # Montar un volumen para persistir los datos de MySQL
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  # Definir el volumen para los datos de MySQL
+  mysql-data:
+
+# Consejos y trucos:
+# - Usa 'docker-compose up' para construir y ejecutar todos los servicios definidos.
+# - Usa 'docker-compose down' para detener y eliminar los contenedores, redes y volúmenes creados.
+# - Usa 'docker-compose logs' para ver los logs de todos los servicios.
+# - Usa 'docker-compose exec nombre_servicio /bin/bash' para acceder a un contenedor en ejecución.

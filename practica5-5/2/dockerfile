@@ -1,0 +1,21 @@
+# Usar la imagen base de Debian Buster en su versión ligera
+FROM debian:buster-slim
+
+# Actualizar los repositorios e instalar Apache, luego limpiar la caché de apt
+RUN apt-get update && apt-get install -y apache2 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copiar el archivo index.html al directorio de Apache
+COPY index.html /var/www/html/
+
+# Exponer el puerto 80 para acceder al servidor web
+EXPOSE 80
+
+# Comando para iniciar Apache en primer plano
+CMD ["apache2ctl", "-D", "FOREGROUND"]
+
+# Consejos y trucos:
+# - Usa 'docker build -t nombre_imagen .' para construir la imagen.
+# - Usa 'docker run -p 80:80 nombre_imagen' para ejecutar el contenedor y mapear el puerto 80 del host al contenedor.
+# - Verifica los logs del contenedor con 'docker logs id_contenedor' para solucionar problemas.
+# - Usa 'docker exec -it id_contenedor /bin/bash' para acceder al contenedor en ejecución y depurar.
