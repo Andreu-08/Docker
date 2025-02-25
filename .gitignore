@@ -1,0 +1,12 @@
+# Ignorar todos los archivos por defecto
+*
+
+# No ignorar los Dockerfiles
+!**/Dockerfile
+!**/dockerfile
+
+# No ignorar el archivo docker-compose.yml
+!**/docker-compose.yml
+
+# No ignorar el archivo .gitignore
+!.gitignore
